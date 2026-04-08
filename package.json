@@ -1,0 +1,19 @@
+{
+  "name": "exercicios-ts",
+  "version": "1.0.0",
+  "description": "Exercícios em TypeScript",
+  "main": "exercício1.ts",
+  "scripts": {
+    "start": "ts-node exercício1.ts",
+    "dev": "ts-node-dev --respawn exercício1.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "@types/node": "^20.10.6"
+  }
+}

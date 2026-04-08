@@ -1,62 +1,63 @@
-class Configuration {
-    private nome: string;
-    private server: string;
-    private max: number;
-    private sent: number;
+interface TypeChannel {
+    name: string;
+    send(message: string): void;
+}
 
-     constructor(nome: string, server: string) {
-        this.nome = nome;
-        this.server = server;
-        this.max = 100;
-        this.sent = 0;
-     }
+class Email implements TypeChannel {
+    name: string;
 
-    private static instance: Configuration;
-
-    public static getConfigurations(nome: string, server: string) {
-        if (!this.instance) {
-            this.instance = new Configuration(nome, server);
-        }
-        return this.instance;
+    constructor(name = 'email') {
+        this.name = name
     }
 
-    public sendNotification() {
-        if (this.sent < this.max) {
-            this.sent++;
-            console.log(`Notificação enviada. Total enviado: ${this.sent}`);
-        } else {
-            console.log('Limite de notificações atingido');
-        }
+    send(message: string) {
+        console.log(`${message}`);
+        console.log('sent');
     }
 }
 
-class Notification {
-    public send(): void {
-        console.log('Enviando notificação...');
+class Sms implements TypeChannel {
+    name: string;
+
+    constructor (name = 'sms') {
+        this.name= name
+    }
+
+    send(message: string) {
+        console.log(`${message}`);
+        console.log('sent');
     }
 }
 
-class EmailNotification extends Notification {
-    public send(): void {
-        console.log('Enviando notificação por email...');
+class Push implements TypeChannel {
+    name: string;
+
+    constructor(name = 'sms') {
+        this.name = name
+    }
+
+    send(message: string) {
+        console.log(`${message}`);
+        console.log('sent');
     }
 }
 
-class SMSNotification extends Notification {
-    public send(): void {
-        console.log('Enviando notificação por SMS...');
+class NotificationsFactory {
+  
+    private constructor() {}
+
+    static createChannel(type: string) {
+       if (type === 'email')
+            return new Email();
+       else if (type === 'sms')
+            return new Sms();
+        else if (type === 'push')
+            return new Push();
     }
 }
 
-class NotificationFactory {
+const email = NotificationsFactory.createChannel('email');
+const sms = NotificationsFactory.createChannel('sms');
+const push = NotificationsFactory.createChannel('push');
 
-    public static createNotification(type: string) {
-        if (type === 'email') {
-            return new EmailNotification();
-        } else if (type === 'sms') {
-            return new SMSNotification();
-        } else {
-            throw new Error('Tipo de notificação desconhecido');
-        }
-    }
-}
+email?.send('hi')
