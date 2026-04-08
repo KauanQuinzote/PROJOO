@@ -1,13 +1,31 @@
+enum NotificationType{
+    email = 'email',
+    sms = 'sms',
+    push = 'push'
+}
+
 interface TypeChannel {
-    name: string;
     send(message: string): void;
 }
 
-class Email implements TypeChannel {
-    name: string;
+abstract class SendTo implements TypeChannel{
+    constructor(private name: string) {}
 
-    constructor(name = 'email') {
-        this.name = name
+    send(message: string) {
+        console.log(`${message}`);
+        console.log('sent');
+    }
+}
+
+class Email extends SendTo {
+
+    constructor() { super(NotificationType.email) }
+    
+}
+
+class Sms extends SendTo {
+    constructor () {
+        super(NotificationType.sms );
     }
 
     send(message: string) {
@@ -16,29 +34,9 @@ class Email implements TypeChannel {
     }
 }
 
-class Sms implements TypeChannel {
-    name: string;
-
-    constructor (name = 'sms') {
-        this.name= name
-    }
-
-    send(message: string) {
-        console.log(`${message}`);
-        console.log('sent');
-    }
-}
-
-class Push implements TypeChannel {
-    name: string;
-
-    constructor(name = 'sms') {
-        this.name = name
-    }
-
-    send(message: string) {
-        console.log(`${message}`);
-        console.log('sent');
+class Push extends SendTo {
+    constructor() {
+        super(NotificationType.push);
     }
 }
 
@@ -53,6 +51,8 @@ class NotificationsFactory {
             return new Sms();
         else if (type === 'push')
             return new Push();
+        
+    throw new Error(`Tipo de canal ${type} é inválido.`);
     }
 }
 
@@ -60,4 +60,6 @@ const email = NotificationsFactory.createChannel('email');
 const sms = NotificationsFactory.createChannel('sms');
 const push = NotificationsFactory.createChannel('push');
 
-email?.send('hi')
+email?.send('Hello via Email!');
+sms?.send('Hello via SMS!');
+push?.send('Hello via Push Notification!');
