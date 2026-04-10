@@ -5,7 +5,9 @@
   "main": "exercício1.ts",
   "scripts": {
     "start": "ts-node exercício1.ts",
-    "dev": "ts-node-dev --respawn exercício1.ts"
+    "dev": "ts-node-dev --respawn exercício1.ts",
+    "test": "ts-node exercicio2.test.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

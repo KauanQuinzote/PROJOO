@@ -1,14 +1,14 @@
-enum NotificationType{
+export enum NotificationType{
     email = 'email',
     sms = 'sms',
     push = 'push'
 }
 
-interface TypeChannel {
+export interface TypeChannel {
     send(message: string): void;
 }
 
-abstract class SendTo implements TypeChannel{
+export abstract class SendTo implements TypeChannel{
     constructor(private name: string) {}
 
     send(message: string) {
@@ -17,13 +17,13 @@ abstract class SendTo implements TypeChannel{
     }
 }
 
-class Email extends SendTo {
+export class Email extends SendTo {
 
     constructor() { super(NotificationType.email) }
     
 }
 
-class Sms extends SendTo {
+export class Sms extends SendTo {
     constructor () {
         super(NotificationType.sms );
     }
@@ -34,13 +34,24 @@ class Sms extends SendTo {
     }
 }
 
-class Push extends SendTo {
+export class Push extends SendTo {
     constructor() {
         super(NotificationType.push);
     }
 }
 
-class NotificationsFactory {
+export class Whatsapp {
+
+    constructor(){ }
+
+    public sendMessage(message: string) {
+        console.log("Ó o zap");
+        console.log(`${message}`);
+    }
+
+}
+
+export class NotificationsFactory {
   
     private constructor() {}
 
@@ -64,27 +75,32 @@ email?.send('Hello via Email!');
 sms?.send('Hello via SMS!');
 push?.send('Hello via Push Notification!');
 
-class Configurations {
+export class Singleton {
     nome: string;
     server: string;
-    instance: Configurations | null;
+    private static instance: Singleton | null = null;
     max: number;
     counter: number;
 
     private constructor(name: string, server: string, max: number) {
         this.nome = name;
         this.server = server;
-        this.instance = null;
         this.max = max;
         this.counter = 0;
     }
 
-    public getConfigurations(name: string, server: string, max: number) {
+    private verifyCounter() {
+
+        if (this.counter > this.max)
+            throw Error('Servidor já atingiu o limite máximo de utilização');
+        else
+            this.counter++;
+    }
+
+    public static getConfigurations(name: string, server: string, max: number) {
         if( this.instance == null)
-            this.instance = new Configurations(name, server, max);
-
-        this.counter++;
-
+            this.instance = new Singleton(name, server, max);
+        this.instance.verifyCounter();
         return this.instance;
     }
 }
