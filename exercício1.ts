@@ -51,7 +51,7 @@ class NotificationsFactory {
             return new Sms();
         else if (type === 'push')
             return new Push();
-        
+
     throw new Error(`Tipo de canal ${type} é inválido.`);
     }
 }
@@ -63,3 +63,28 @@ const push = NotificationsFactory.createChannel('push');
 email?.send('Hello via Email!');
 sms?.send('Hello via SMS!');
 push?.send('Hello via Push Notification!');
+
+class Configurations {
+    nome: string;
+    server: string;
+    instance: Configurations | null;
+    max: number;
+    counter: number;
+
+    private constructor(name: string, server: string, max: number) {
+        this.nome = name;
+        this.server = server;
+        this.instance = null;
+        this.max = max;
+        this.counter = 0;
+    }
+
+    public getConfigurations(name: string, server: string, max: number) {
+        if( this.instance == null)
+            this.instance = new Configurations(name, server, max);
+
+        this.counter++;
+
+        return this.instance;
+    }
+}
