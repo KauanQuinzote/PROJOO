@@ -1,53 +1,141 @@
 import { Coffee, Cappuccino, Tea, Milky, Chocolate, Chantilly, Cinnamon, Beverage } from './decorator';
 
-console.log("=== Testando Bebidas Básicas ===\n");
+describe('Decorator Pattern - Bebidas', () => {
+  describe('Bebidas Básicas', () => {
+    it('Coffee deve ter nome correto', () => {
+      const coffee = new Coffee();
+      expect(coffee.name).toBeDefined();
+      expect(typeof coffee.name).toBe('string');
+    });
 
-const coffee = new Coffee();
-console.log(`Nome: ${coffee.name}`);
-console.log(`Descrição: ${coffee.getDescription()}`);
-console.log(`Custo: R$ ${coffee.getCost().toFixed(2)}\n`);
+    it('Coffee deve retornar descrição', () => {
+      const coffee = new Coffee();
+      expect(coffee.getDescription()).toBeDefined();
+      expect(typeof coffee.getDescription()).toBe('string');
+    });
 
-const cappuccino = new Cappuccino();
-console.log(`Nome: ${cappuccino.name}`);
-console.log(`Descrição: ${cappuccino.getDescription()}`);
-console.log(`Custo: R$ ${cappuccino.getCost().toFixed(2)}\n`);
+    it('Coffee deve ter custo definido', () => {
+      const coffee = new Coffee();
+      expect(coffee.getCost()).toBeGreaterThan(0);
+    });
 
-const tea = new Tea();
-console.log(`Nome: ${tea.name}`);
-console.log(`Descrição: ${tea.getDescription()}`);
-console.log(`Custo: R$ ${tea.getCost().toFixed(2)}\n`);
+    it('Cappuccino deve ter nome correto', () => {
+      const cappuccino = new Cappuccino();
+      expect(cappuccino.name).toBeDefined();
+    });
 
-console.log("=== Testando Decorators ===\n");
+    it('Cappuccino deve retornar descrição', () => {
+      const cappuccino = new Cappuccino();
+      expect(cappuccino.getDescription()).toBeDefined();
+    });
 
-let beverage: Beverage = new Coffee();
-console.log(`1. ${beverage.getDescription()} - R$ ${beverage.getCost().toFixed(2)}`);
+    it('Cappuccino deve ter custo definido', () => {
+      const cappuccino = new Cappuccino();
+      expect(cappuccino.getCost()).toBeGreaterThan(0);
+    });
 
-beverage = new Milky(beverage);
-console.log(`2. ${beverage.getDescription()} - R$ ${beverage.getCost().toFixed(2)}`);
+    it('Tea deve ter nome correto', () => {
+      const tea = new Tea();
+      expect(tea.name).toBeDefined();
+    });
 
-beverage = new Chocolate(beverage);
-console.log(`3. ${beverage.getDescription()} - R$ ${beverage.getCost().toFixed(2)}`);
+    it('Tea deve retornar descrição', () => {
+      const tea = new Tea();
+      expect(tea.getDescription()).toBeDefined();
+    });
 
-beverage = new Chantilly(beverage);
-console.log(`4. ${beverage.getDescription()} - R$ ${beverage.getCost().toFixed(2)}`);
+    it('Tea deve ter custo definido', () => {
+      const tea = new Tea();
+      expect(tea.getCost()).toBeGreaterThan(0);
+    });
+  });
 
-beverage = new Cinnamon(beverage);
-console.log(`5. ${beverage.getDescription()} - R$ ${beverage.getCost().toFixed(2)}\n`);
+  describe('Decorators - Composição', () => {
+    it('Coffee com Milky deve aumentar descrição', () => {
+      let beverage: Beverage = new Coffee();
+      const descricaoOriginal = beverage.getDescription();
+      
+      beverage = new Milky(beverage);
+      const descricaoComMilky = beverage.getDescription();
+      
+      expect(descricaoComMilky).not.toBe(descricaoOriginal);
+      expect(descricaoComMilky.length).toBeGreaterThan(descricaoOriginal.length);
+    });
 
-console.log("=== Testando Combinação Alternativa ===\n");
+    it('Coffee com Milky deve aumentar custo', () => {
+      let beverage: Beverage = new Coffee();
+      const custoOriginal = beverage.getCost();
+      
+      beverage = new Milky(beverage);
+      const custoComMilky = beverage.getCost();
+      
+      expect(custoComMilky).toBeGreaterThan(custoOriginal);
+    });
 
-let bebida: Beverage = new Cappuccino();
-console.log(`Base: ${bebida.getDescription()} - R$ ${bebida.getCost().toFixed(2)}`);
+    it('Coffee com múltiplos decorators', () => {
+      let beverage: Beverage = new Coffee();
+      const custoOriginal = beverage.getCost();
+      
+      beverage = new Milky(beverage);
+      const custoComMilky = beverage.getCost();
+      
+      beverage = new Chocolate(beverage);
+      const custoComChocolate = beverage.getCost();
+      
+      beverage = new Chantilly(beverage);
+      const custoComChantilly = beverage.getCost();
+      
+      beverage = new Cinnamon(beverage);
+      const custoComCinnamon = beverage.getCost();
+      
+      expect(custoComMilky).toBeGreaterThan(custoOriginal);
+      expect(custoComChocolate).toBeGreaterThan(custoComMilky);
+      expect(custoComChantilly).toBeGreaterThan(custoComChocolate);
+      expect(custoComCinnamon).toBeGreaterThan(custoComChantilly);
+    });
+  });
 
-bebida = new Chocolate(bebida);
-console.log(`Com Chocolate: ${bebida.getDescription()} - R$ ${bebida.getCost().toFixed(2)}`);
+  describe('Decorators - Combinações', () => {
+    it('Cappuccino com Chocolate e Leite', () => {
+      let bebida: Beverage = new Cappuccino();
+      const custoBase = bebida.getCost();
+      
+      bebida = new Chocolate(bebida);
+      bebida = new Milky(bebida);
+      
+      expect(bebida.getCost()).toBeGreaterThan(custoBase);
+    });
 
-bebida = new Milky(bebida);
-console.log(`Com Leite: ${bebida.getDescription()} - R$ ${bebida.getCost().toFixed(2)}\n`);
+    it('Tea com Chocolate', () => {
+      let bebida: Beverage = new Tea();
+      const custoBase = bebida.getCost();
+      
+      bebida = new Chocolate(bebida);
+      
+      expect(bebida.getCost()).toBeGreaterThan(custoBase);
+      expect(bebida.getDescription()).toContain('Chocolate');
+    });
+  });
 
-console.log("=== Testando iterateCost ===\n");
+  describe('iterateCost', () => {
+    it('iterateCost deve aumentar o custo da bebida', () => {
+      const chaiTea = new Tea();
+      const custoAntes = chaiTea.getCost();
+      
+      chaiTea.iterateCost(2.00);
+      const custoDepois = chaiTea.getCost();
+      
+      expect(custoDepois).toBeGreaterThan(custoAntes);
+    });
 
-const chaiTea = new Tea();
-console.log(`Antes: ${chaiTea.getDescription()} - R$ ${chaiTea.getCost().toFixed(2)}`);
-chaiTea.iterateCost(2.00);
-console.log(`Depois: ${chaiTea.getDescription()} - R$ ${chaiTea.getCost().toFixed(2)}`);
+    it('iterateCost deve adicionar o valor correto', () => {
+      const coffee = new Coffee();
+      const custoOriginal = coffee.getCost();
+      const adicional = 1.50;
+      
+      coffee.iterateCost(adicional);
+      
+      expect(coffee.getCost()).toBe(custoOriginal + adicional);
+    });
+  });
+});

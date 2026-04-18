@@ -3,7 +3,9 @@ interface Observer {
     update(subject: Subject): void;
 }
 
-abstract class Subject {
+export interface IObserver extends Observer {}
+
+export abstract class Subject {
     private observers: Observer[] = [];
 
     attach(observer: Observer): void {
@@ -24,7 +26,7 @@ abstract class Subject {
     }
 }
 
-class Universidade implements Observer {
+export class Universidade implements Observer {
     private nome: string;
     private local: string;
     private medidores: Medidor[];
@@ -43,7 +45,7 @@ class Universidade implements Observer {
     }
 }
 
-class Medidor extends Subject {
+export class Medidor extends Subject {
     private temperatura: number;
     private ph: number;
     private pressaoAtmosferica: number;
@@ -94,9 +96,9 @@ class Medidor extends Subject {
     }
 }
 
-const Unifesp = new Universidade("Unifesp", "São Paulo");
-const Ufrj = new Universidade("UFRJ", "Rio de Janeiro");
-const Ufrgs = new Universidade("UFRGS", "Porto Alegre");
+export const Unifesp = new Universidade("Unifesp", "São Paulo");
+export const Ufrj = new Universidade("UFRJ", "Rio de Janeiro");
+export const Ufrgs = new Universidade("UFRGS", "Porto Alegre");
 
 const medidor1 = new Medidor(25, 7, 1013, 60);
 const medidor2 = new Medidor(30, 6.5, 1010, 55);
