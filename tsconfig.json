@@ -13,8 +13,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
-  "include": ["*.ts", "exercicios3/exercicio3.ts", "exercicios3/exercicio3.test.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
